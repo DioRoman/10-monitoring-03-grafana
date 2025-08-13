@@ -1,5 +1,5 @@
 ---
-- hosts: grafana_servers
+- hosts: grafana-servers
   become: true
   vars_files:
     - group_vars/grafana/vars.yml

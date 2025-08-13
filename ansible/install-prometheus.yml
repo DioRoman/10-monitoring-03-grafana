@@ -1,5 +1,5 @@
 ---
-- hosts: prometheus_servers
+- hosts: prometheus-servers
   become: true
   vars_files:
     - group_vars/prometheus/vars.yml
