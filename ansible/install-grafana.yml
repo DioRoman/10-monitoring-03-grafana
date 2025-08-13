@@ -1,0 +1,67 @@
+---
+- hosts: grafana_servers
+  become: true
+  vars_files:
+    - group_vars/grafana/vars.yml
+
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - software-properties-common
+          - wget
+          - gnupg
+        state: present
+        update_cache: true
+
+    - name: Download Grafana .deb package
+      get_url:
+        url: "https://mirror.yandex.ru/mirrors/packages.grafana.com/oss/deb/pool/main/g/grafana-enterprise/grafana-enterprise_{{ grafana_version }}_amd64.deb"
+        dest: "/tmp/grafana_{{ grafana_version }}_amd64.deb"
+        mode: '0644'
+
+    - name: Install Grafana from .deb package
+      apt:
+        deb: "/tmp/grafana_{{ grafana_version }}_amd64.deb"
+        state: present
+
+    - name: Ensure grafana group exists
+      group:
+        name: "{{ grafana_group }}"
+        system: true
+
+    - name: Ensure grafana user exists
+      user:
+        name: "{{ grafana_user }}"
+        group: "{{ grafana_group }}"
+        shell: /usr/sbin/nologin
+        system: true
+        create_home: false
+
+    - name: Ensure Grafana config directory ownership
+      file:
+        path: "{{ grafana_config_dir }}"
+        state: directory
+        owner: "{{ grafana_user }}"
+        group: "{{ grafana_group }}"
+
+    - name: Ensure Grafana data directory ownership
+      file:
+        path: "{{ grafana_data_dir }}"
+        state: directory
+        owner: "{{ grafana_user }}"
+        group: "{{ grafana_group }}"
+
+    - name: Enable and start Grafana service
+      systemd:
+        name: grafana-server
+        enabled: true
+        state: started
+
+    - name: Ensure port {{ grafana_port }} is open (UFW)
+      ufw:
+        rule: allow
+        port: "{{ grafana_port }}"
+        proto: tcp
+      when: ansible_facts['os_family'] == "Debian"

@@ -1,0 +1,75 @@
+---
+- hosts: node-exporter
+  become: true
+  vars_files:
+    - group_vars/node_exporter/vars.yml
+
+  tasks:
+    - name: Ensure node_exporter group exists
+      group:
+        name: "{{ node_exporter_group }}"
+        system: true
+
+    - name: Ensure node_exporter user exists
+      user:
+        name: "{{ node_exporter_user }}"
+        group: "{{ node_exporter_group }}"
+        shell: /usr/sbin/nologin
+        system: true
+        create_home: false
+
+    - name: Download Node Exporter archive
+      get_url:
+        url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+        dest: "/tmp/node_exporter.tar.gz"
+        mode: '0644'
+
+    - name: Extract Node Exporter
+      unarchive:
+        src: "/tmp/node_exporter.tar.gz"
+        dest: "/tmp/"
+        remote_src: yes
+
+    - name: Copy node_exporter binary
+      copy:
+        src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
+        dest: "{{ node_exporter_install_dir }}/node_exporter"
+        remote_src: yes
+        owner: root
+        group: root
+        mode: 0755
+
+    - name: Create systemd service file for node_exporter
+      copy:
+        dest: /etc/systemd/system/node_exporter.service
+        content: |
+          [Unit]
+          Description=Prometheus Node Exporter
+          Wants=network-online.target
+          After=network-online.target
+
+          [Service]
+          User={{ node_exporter_user }}
+          Group={{ node_exporter_group }}
+          Type=simple
+          ExecStart={{ node_exporter_install_dir }}/node_exporter --web.listen-address=:{{ node_exporter_port }}
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd daemon
+      systemd:
+        daemon_reload: true
+
+    - name: Enable and start node_exporter service
+      systemd:
+        name: node_exporter
+        enabled: true
+        state: started
+
+    - name: Ensure port {{ node_exporter_port }} is open (UFW)
+      ufw:
+        rule: allow
+        port: "{{ node_exporter_port }}"
+        proto: tcp
+      when: ansible_facts['os_family'] == "Debian"
