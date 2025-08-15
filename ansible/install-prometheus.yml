@@ -5,6 +5,12 @@
     - group_vars/prometheus/vars.yml
 
   tasks:
+    - name: Create prometheus group
+      ansible.builtin.group:
+        name: "{{ prometheus_group }}"
+        system: true
+        state: present
+
     - name: Create prometheus user and group
       ansible.builtin.user:
         name: "{{ prometheus_user }}"

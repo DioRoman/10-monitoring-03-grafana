@@ -5,3 +5,12 @@ prometheus_group: prometheus
 prometheus_install_dir: /opt/prometheus
 prometheus_data_dir: /var/lib/prometheus
 prometheus_download_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+
+prometheus_config_path: /opt/prometheus/prometheus-3.5.0.linux-amd64/prometheus.yml
+# Список IP/адресов node_exporters, или инвентори-группа:
+node_exporters_targets: >-
+  {{
+    groups['node-exporter'] | default([]) |
+    map('extract', hostvars, ['ansible_host']) |
+    select('defined') | list
+  }}
