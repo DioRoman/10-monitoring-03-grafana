@@ -15,17 +15,16 @@
       }
     ]
   },
-  "description": "my",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 2,
   "links": [],
   "panels": [
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "fev0cf92v8av4c"
+        "uid": "dev76x3pblv5sb"
       },
       "fieldConfig": {
         "defaults": {
@@ -44,9 +43,35 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "bytes"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"node_filesystem_free_bytes\", device=\"/dev/vda1\", fstype=\"ext4\", instance=\"158.160.40.111:9100\", job=\"node_exporter\", mountpoint=\"/\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Доступно памяти:"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"node_filesystem_size_bytes\", device=\"/dev/vda1\", fstype=\"ext4\", instance=\"158.160.40.111:9100\", job=\"node_exporter\", mountpoint=\"/\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Всего памяти:"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -57,9 +82,9 @@
       "id": 4,
       "options": {
         "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
@@ -75,20 +100,155 @@
       "pluginVersion": "11.6.1",
       "targets": [
         {
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "node_filesystem_free_bytes{mountpoint=\"/\", fstype!~\"tmpfs|overlay\"} / 1024 / 1024 / 1024",
+          "expr": "node_filesystem_free_bytes{mountpoint=\"/\", fstype!~\"tmpfs|overlay\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dev76x3pblv5sb"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "expr": "node_filesystem_size_bytes{mountpoint=\"/\", fstype!~\"tmpfs|overlay\"}",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B",
+          "useBackend": false
         }
       ],
-      "title": "Free Memory",
+      "title": "Memory",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "fev0cf92v8av4c"
+        "uid": "dev76x3pblv5sb"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"node_memory_MemFree_bytes\", instance=\"158.160.40.111:9100\", job=\"node_exporter\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Доступно RAM:"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"node_memory_MemTotal_bytes\", instance=\"158.160.40.111:9100\", job=\"node_exporter\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Всего RAM:"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "vertical",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": true,
+        "textMode": "value_and_name",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.6.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dev76x3pblv5sb"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "node_memory_MemFree_bytes",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "dev76x3pblv5sb"
+          },
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "node_memory_MemTotal_bytes",
+          "fullMetaSearch": false,
+          "hide": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B",
+          "useBackend": false
+        }
+      ],
+      "title": "RAM",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "dev76x3pblv5sb"
       },
       "fieldConfig": {
         "defaults": {
@@ -104,7 +264,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 9,
+            "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -112,11 +272,8 @@
               "viz": false
             },
             "insertNulls": false,
-            "lineInterpolation": "smooth",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 3,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
@@ -131,6 +288,7 @@
               "mode": "off"
             }
           },
+          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -143,23 +301,61 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"node_load1\", instance=\"158.160.40.111:9100\", job=\"node_exporter\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Загрузка 1 мин"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"node_load5\", instance=\"158.160.40.111:9100\", job=\"node_exporter\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Загрузка 5 мин"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"node_load15\", instance=\"158.160.40.111:9100\", job=\"node_exporter\"}"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Загрузка 15 мин"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 0
+        "x": 0,
+        "y": 8
       },
       "id": 3,
       "options": {
         "legend": {
           "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
         },
         "tooltip": {
           "hideZeros": false,
@@ -179,7 +375,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "fev0cf92v8av4c"
+            "uid": "dev76x3pblv5sb"
           },
           "editorMode": "code",
           "expr": "node_load5",
@@ -192,7 +388,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "fev0cf92v8av4c"
+            "uid": "dev76x3pblv5sb"
           },
           "editorMode": "code",
           "expr": "node_load15",
@@ -203,13 +399,13 @@
           "refId": "C"
         }
       ],
-      "title": "Node load",
+      "title": "CPU Load Average (1/5/15 min)",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "fev0cf92v8av4c"
+        "uid": "dev76x3pblv5sb"
       },
       "fieldConfig": {
         "defaults": {
@@ -228,14 +424,15 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "percent"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
+        "x": 12,
         "y": 8
       },
       "id": 2,
@@ -259,129 +456,31 @@
       "pluginVersion": "11.6.1",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "fev0cf92v8av4c"
-          },
-          "disableTextWrap": false,
           "editorMode": "code",
           "expr": "100 * (1 - avg(rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) by (instance))",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "instant": false,
           "legendFormat": "__auto",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "A"
         }
       ],
-      "title": "CPU",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "fev0cf92v8av4c"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "__systemRef": "hideSeriesFrom",
-            "matcher": {
-              "id": "byNames",
-              "options": {
-                "mode": "exclude",
-                "names": [
-                  "{__name__=\"go_memstats_mcache_inuse_bytes\", instance=\"51.250.15.253:9100\", job=\"node_exporter\"}"
-                ],
-                "prefix": "All except:",
-                "readOnly": true
-              }
-            },
-            "properties": []
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 8
-      },
-      "id": 1,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.6.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "fev0cf92v8av4c"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "node_memory_MemAvailable_bytes{job=\"node_exporter\"}/1024/1024",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "FREE RAM",
+      "title": "CPU Utils",
       "type": "stat"
     }
   ],
   "preload": false,
+  "refresh": "10s",
   "schemaVersion": 41,
   "tags": [],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Best Dashboard",
-  "uid": "dev0ju0gkufwgd",
-  "version": 8
+  "title": "New Best Dashboard",
+  "uid": "cev77hrh9oidcb",
+  "version": 13
 }
