@@ -89,7 +89,6 @@ CPULA 1/5/15;
 
 /newbot
 
-```markdown
 # 📘 Интеграция Grafana с Telegram для оповещений
 
 ## 🚀 Общий смысл
