@@ -21,11 +21,29 @@ Terraform создаёт облачную инфраструктуру (сеть
   - **Grafana VM** – визуализация метрик (порт 3000).  
 - Применяет cloud-init для настройки пользователей и ключей.  
 
+<img width="2433" height="336" alt="Снимок экрана 2025-08-17 154803" src="https://github.com/user-attachments/assets/f450647a-b086-4eb3-8329-9e385aaca798" />
+
 ### 2. Ansible (конфигурация сервисов)
-- **Prometheus**: установка бинарников, настройка директорий, добавление systemd‑сервиса.  
-- **Grafana**: установка пакета, конфигурация пользователя и папок, запуск systemd‑сервиса.  
-- **Node Exporter**: установка бинарника, настройка systemd‑сервиса.  
-- **Интеграция**: обновление `prometheus.yml`, добавление таргетов Node Exporter и перезапуск Prometheus.  
+
+- **Prometheus**: установка бинарников, настройка директорий, добавление systemd‑сервиса.
+
+<img width="1528" height="506" alt="Снимок экрана 2025-08-17 155607" src="https://github.com/user-attachments/assets/c91ff105-c730-4e00-82b6-a6bfa9b04614" />
+
+- **Grafana**: установка пакета, конфигурация пользователя и папок, запуск systemd‑сервиса.
+
+<img width="1181" height="860" alt="Снимок экрана 2025-08-17 155800" src="https://github.com/user-attachments/assets/4842b5ba-3e0c-4fc8-bced-abef88c32e93" />
+
+<img width="1490" height="694" alt="Снимок экрана 2025-08-17 155829" src="https://github.com/user-attachments/assets/f00caf9b-63a2-4964-93f2-86e62d41c7b2" />
+
+- **Node Exporter**: установка бинарника, настройка systemd‑сервиса.
+
+<img width="1522" height="372" alt="Снимок экрана 2025-08-17 155646" src="https://github.com/user-attachments/assets/1922007e-2c42-436b-a1a7-4c402c60243f" />
+  
+- **Интеграция**: обновление `prometheus.yml`, добавление таргетов Node Exporter и перезапуск Prometheus.
+
+<img width="1522" height="372" alt="image" src="https://github.com/user-attachments/assets/7bf97036-24e4-45bc-b20a-c0b3b9b54edd" />
+  
+ВАЖНО: не забывайте добавить в inventory внешние адреса ВМ! Grafana из официального репозитория в РФ не доступна. Пакет скачиваем с сервера Yandex.
 
 ***
 
