@@ -47,9 +47,6 @@ Terraform создаёт облачную инфраструктуру (сеть
 <img width="1503" height="372" alt="Снимок экрана 2025-08-17 160130" src="https://github.com/user-attachments/assets/69c9f1f4-3bb2-4624-8ac4-958f10f66072" />
 
 - **Node Exporter**: установка бинарника, настройка systemd‑сервиса.
-
-<img width="1522" height="372" alt="Снимок экрана 2025-08-17 155646" src="https://github.com/user-attachments/assets/1922007e-2c42-436b-a1a7-4c402c60243f" />
-  
 - **Интеграция**: обновление `prometheus.yml`, добавление таргетов Node Exporter и перезапуск Prometheus.
 
 <img width="1522" height="372" alt="image" src="https://github.com/user-attachments/assets/7bf97036-24e4-45bc-b20a-c0b3b9b54edd" />
