@@ -164,7 +164,15 @@ https://github.com/DioRoman/10-monitoring-03-grafana/blob/main/Best%20Dashboard-
 1. Перейдите в Grafana: **Alerting → Alert rules**.  
 2. Создайте новое правило или отредактируйте существующее.  
 3. В разделе **Configure labels and notifications** выберите созданный контакт (`telegram_alerts`).  
-4. Сохраните правило.  
+4. Сохраните правило.
+
+Скриншот правила, которое направляет сообщение в telegram-bot если instance не доступен больше минуты:
+
+   <img width="2101" height="812" alt="Снимок экрана 2025-08-16 191700" src="https://github.com/user-attachments/assets/10dfc7bb-a50c-473d-961a-132ec442a9bd" />
+
+Пример сообщения из telegram бота.
+
+<img width="752" height="517" alt="Снимок экрана 2025-08-17 163037" src="https://github.com/user-attachments/assets/73b09c28-aa18-4906-a0ad-6912ec675575" />
 
 ---
 
