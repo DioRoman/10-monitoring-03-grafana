@@ -67,43 +67,41 @@ Terraform создаёт облачную инфраструктуру (сеть
 
 ***
 
-<details>
-  <summary>Полезные команды</summary>
+## Настройка dashboard Grafana
 
+Настроим минимальный dashboard Grafana для анализа информации из Prometheus (к которому подключен Node Exporter).
 
-`cd /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/terraform`
+Будем использовать следующие panels:
 
-`terraform apply -auto-approve`
+1. Утилизация CPU для nodeexporter (в процентах, 100-idle);
+  
+  `100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance))`
 
-`ansible-playbook -i /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/inventories/hosts.yml /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/install-prometheus.yml`
-
-`ansible-playbook -i /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/inventories/hosts.yml /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/install-grafana.yml`
-
-`ansible-playbook -i /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/inventories/hosts.yml /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/install-node-exporter.yml`
-
-`ansible-playbook -i /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/inventories/hosts.yml /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/connected-node-exporter.yml`
-
-утилизация CPU для nodeexporter (в процентах, 100-idle);
-
-`100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance))`
-
-CPULA 1/5/15;
+2. CPULA 1/5/15;
 
 `node_load1` 
 
 `node_load5` 
 
 `node_load15`
+   
+3. Количество свободной оперативной памяти;
 
-количество свободной оперативной памяти;
+`node_memory_MemAvailable_bytes` 
+   
+4. количество места на файловой системе.
 
-`node_memory_MemAvailable_bytes / 1024 / 1024`
+`node_filesystem_free_bytes{mountpoint="/", fstype!~"tmpfs|overlay"}`
 
-количество места на файловой системе.
+В результате получаем: 
 
-`node_filesystem_free_bytes{mountpoint="/", fstype!~"tmpfs|overlay"} / 1024 / 1024 / 1024`
+<img width="2517" height="959" alt="Снимок экрана 2025-08-16 211616" src="https://github.com/user-attachments/assets/6b12bfae-40a4-490b-b011-57e6d788ffe5" />
 
-</details>
+Файл с конфигурацией в формате json
+
+https://github.com/DioRoman/10-monitoring-03-grafana/blob/main/Best%20Dashboard-1755209095627.json
+
+***
 
 # 📘 Интеграция Grafana с Telegram для оповещений
 
@@ -178,3 +176,21 @@ CPULA 1/5/15;
 Обратите внимание, что Telegram ограничивает длину сообщений 4096 UTF-8 символов, учитывайте это при формировании текстов оповещений.
 
 Эти шаги обеспечивают стандартную интеграцию между Grafana и Telegram для получения alert-уведомлений.
+
+
+<details>
+  <summary>Полезные команды</summary>
+
+`cd /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/terraform`
+
+`terraform apply -auto-approve`
+
+`ansible-playbook -i /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/inventories/hosts.yml /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/install-prometheus.yml`
+
+`ansible-playbook -i /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/inventories/hosts.yml /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/install-grafana.yml`
+
+`ansible-playbook -i /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/inventories/hosts.yml /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/install-node-exporter.yml`
+
+`ansible-playbook -i /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/inventories/hosts.yml /mnt/c/Users/rlyst/Netology/10-monitoring-03-grafana/ansible/connected-node-exporter.yml`
+
+</details>
