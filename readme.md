@@ -7,7 +7,14 @@ Terraform создаёт облачную инфраструктуру (сеть
 В итоге получается связка:  
 - **Node Exporter** собирает метрики с серверов,  
 - **Prometheus** агрегирует и хранит данные,  
-- **Grafana** предоставляет визуализацию и дашборды.  
+- **Grafana** предоставляет визуализацию и дашборды.
+
+Весь стек поднимается 5 командами!
+1. `terraform apply` (из директории terraform)
+2. `ansible-playbook -i ./inventories/hosts.yml ./install-prometheus.yml` (из директории ansible)
+3. `ansible-playbook -i ./inventories/hosts.yml ./install-grafana.yml` (из директории ansible)
+4. `ansible-playbook -i ./inventories/hosts.yml ./install-node-exporter.yml` (из директории ansible)
+5. `ansible-playbook -i ./inventories/hosts.yml ./connected-node-exporter.yml` (из директории ansible)
 
 ***
 
@@ -31,9 +38,13 @@ Terraform создаёт облачную инфраструктуру (сеть
 
 - **Grafana**: установка пакета, конфигурация пользователя и папок, запуск systemd‑сервиса.
 
+  При первом входе вводим учетные данные admin\admin. Будет предложено сменить пароль.
+
 <img width="1181" height="860" alt="Снимок экрана 2025-08-17 155800" src="https://github.com/user-attachments/assets/4842b5ba-3e0c-4fc8-bced-abef88c32e93" />
 
-<img width="1490" height="694" alt="Снимок экрана 2025-08-17 155829" src="https://github.com/user-attachments/assets/f00caf9b-63a2-4964-93f2-86e62d41c7b2" />
+  Добавляем в datasource наш сервер Prometheus.
+
+<img width="1503" height="372" alt="Снимок экрана 2025-08-17 160130" src="https://github.com/user-attachments/assets/69c9f1f4-3bb2-4624-8ac4-958f10f66072" />
 
 - **Node Exporter**: установка бинарника, настройка systemd‑сервиса.
 
@@ -43,7 +54,7 @@ Terraform создаёт облачную инфраструктуру (сеть
 
 <img width="1522" height="372" alt="image" src="https://github.com/user-attachments/assets/7bf97036-24e4-45bc-b20a-c0b3b9b54edd" />
   
-ВАЖНО: не забывайте добавить в inventory внешние адреса ВМ! Grafana из официального репозитория в РФ не доступна. Пакет скачиваем с сервера Yandex.
+ВАЖНО: не забывайте добавить в inventory hosts.yml внешние адреса ВМ! Grafana из официального репозитория в РФ не доступна. Пакет скачиваем с сервера Yandex.
 
 ***
 
